@@ -14,15 +14,15 @@
 <v t="amd.20160714225308.3"><vh>@string initial_split_orientation = horizontal</vh></v>
 </v>
 <v t="leo.20190501134205.1"><vh>Chimper 修改</vh></v>
-<v t="leo.20180702145534.1"><vh>wsgi start/stop</vh>
+<v t="leo.20180702145534.1" a="E"><vh>wsgi start/stop</vh>
 <v t="leo.20180702142719.1"><vh>@button start wsgi</vh></v>
 <v t="leo.20180702142849.1"><vh>@button stop wsgi</vh></v>
 </v>
-<v t="leo.20180702145555.1"><vh>http start/stop</vh>
+<v t="leo.20180702145555.1" a="E"><vh>http start/stop</vh>
 <v t="leo.20180702145442.1"><vh>@button start http.server</vh></v>
 <v t="leo.20180702145458.1"><vh>@button stop http.server</vh></v>
 </v>
-<v t="amd.20160714225245.2"><vh>about cmsimfly</vh>
+<v t="amd.20160714225245.2" a="E"><vh>about cmsimfly</vh>
 <v t="amd.20160714225847.1"><vh>@edit README.md</vh></v>
 <v t="amd.20160714230137.1"><vh>@edit .gitignore</vh></v>
 <v t="amd.20160714230155.1"><vh>@edit LICENSE</vh></v>
@@ -56,17 +56,17 @@
 <v t="leo.20180625155248.1"><vh>@edit pybean.py</vh></v>
 <v t="leo.20180625155728.1"><vh>@edit schema.sql</vh></v>
 <v t="amd.20160718130611.1"><vh>@edit .gitignore</vh></v>
-<v t="amd.20160717222221.1"><vh>@path static</vh>
+<v t="amd.20160717222221.1" a="E"><vh>@path static</vh>
 <v t="amd.20160717222242.1"><vh>@edit axuploader.js</vh></v>
 <v t="amd.20160718125932.1"><vh>@edit viewstl.html</vh></v>
 <v t="amd.20160718125943.1"><vh>@edit stlviewer.js</vh></v>
 <v t="amd.20160718212341.1"><vh>@edit jsc3d.js</vh></v>
 </v>
-<v t="amd.20160714230058.1"><vh>@clean wsgi.py</vh>
+<v t="amd.20160714230058.1" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20160714230122.1"><vh>wsgi declarations</vh></v>
 </v>
-<v t="amd.20160714230833.1"><vh>編輯 flaskapp.py</vh>
-<v t="amd.20160714230833.2"><vh>@clean flaskapp.py</vh>
+<v t="amd.20160714230833.1" a="E"><vh>編輯 flaskapp.py</vh>
+<v t="amd.20160714230833.2" a="E"><vh>@clean flaskapp.py</vh>
 <v t="amd.20160714230833.3"><vh>&lt;&lt;declarations&gt;&gt;</vh></v>
 <v t="amd.20160714230833.4"><vh>&lt;&lt;registers&gt;&gt;</vh></v>
 <v t="amd.20160714233131.1"><vh>checkLogin</vh></v>
@@ -134,7 +134,7 @@
 <v t="amd.20160714232232.1"><vh>unique</vh></v>
 </v>
 </v>
-<v t="leo.20180801114529.1"><vh>trash (20180801)</vh>
+<v t="leo.20180801114529.1" a="E"><vh>trash (20180801)</vh>
 <v t="leo.20180801114537.1"><vh>parse_content_old</vh></v>
 </v>
 </vnodes>
@@ -962,6 +962,11 @@ window.location= 'https://' + location.host + location.pathname + location.searc
 &lt;script src="https://scrum-3.github.io/web/brython/brython.js"&gt;&lt;/script&gt;
 &lt;script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"&gt;&lt;/script&gt;
 --&gt;
+&lt;style&gt;
+img {
+    border: 2px solid blue;
+}
+&lt;/style&gt;
 '''
 
 
@@ -2596,6 +2601,11 @@ init_mathjax();
 &lt;script src="https://scrum-3.github.io/web/brython/brython.js"&gt;&lt;/script&gt;
 &lt;script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"&gt;&lt;/script&gt;
 --&gt;
+&lt;style&gt;
+img {
+    border: 2px solid blue;
+}
+&lt;/style&gt;
 '''
 
 
