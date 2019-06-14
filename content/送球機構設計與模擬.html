@@ -158,6 +158,61 @@ img {
 <p><img caption="false" height="376" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g1/images/p37_19-23-46.png" width="800"/></p>
 <p><a href="https://cad.onshape.com/documents/fcd2ce4571d668249938c4fb/w/f8cf7d2aff1a9bbd00da57c4/e/8ed15db245d28cf2aa49ffb2">送球機構</a> 40623206</p>
 <p><img caption="false" height="376" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g1/images/2019-06-12_19-56-34.gif" width="800"/></p>
+<p><strong>機構模擬測試<span>  (40623203)</span></strong></p>
+<p><strong><img alt="" height="429" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g1/images/%E9%80%81%E7%90%83%E6%A9%9F%E6%A7%8B%E6%A8%A1%E6%93%AC.gif" width="800"/></strong></p>
+<p><strong><span>送球機構第一版模擬  (40623203)</span></strong></p>
+<p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/i_aKMCLqzlU" width="560"></iframe></strong></p>
+<p><strong><b>送球機構左右進洞<span>  (40623203)</span></b></strong></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/fYm1spOfMPs" width="560"></iframe></p>
+<p><strong>送球機構程式<span>  (40623203)</span></strong></p>
+<p>利用感測器感測到球，使平台下降到下方的感測器，球滾入後，平台上升，回到場內，繼續競賽</p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">function sysCall_init()
+-- 定義參數
+    slider=sim.getObjectHandle('drive')
+-- 定義物件 drive 驅動軸為 slider
+    down_Sensor=sim.getObjectHandle("sensor")
+-- 定義物件 sensor 感測器為 down_Sensor
+    down_Sensor_1=sim.getObjectHandle("sensor1")
+-- 定義物件 sensor1 感測器為 down_Sensor_1
+    up_Sensor=sim.getObjectHandle("sensor0")
+-- 定義物件 sensor0 感測器為 up_Sensor
+    speed=0
+-- 初始速度參數
+    A=-1
+-- 初始值
+    b=-1
+-- 初始值
+end
+ 
+function sysCall_actuation()
+    down=sim.readProximitySensor(down_Sensor)
+-- down 讀取 down_Sensor 感測器的狀態
+    down_1=sim.readProximitySensor(down_Sensor_1)
+-- down_1 讀取 down_Sensor_1 感測器的狀態
+    up=sim.readProximitySensor(up_Sensor)
+-- up 讀取 up_Sensor 感測器的狀態
+    if (down&gt;0) or (down_1&gt;0) 
+-- 當感測器 down 或 down_1 觸發
+        then A=sim.getSimulationTime()+3 
+-- 設定 A = 模擬時間 + 3 秒 
+    end
+    if (A&gt;0) 
+        then sim.setJointTargetVelocity(slider,speed-0.08)
+-- slider 就會以速度 -0.08 向下移動
+    end
+    if (up&gt;0) 
+-- 當感測器 up 觸發
+        then b=sim.getSimulationTime()+3 
+-- 設定 b = 模擬時間 + 3 秒 
+    end
+    if (b&gt;0) 
+        then sim.setJointTargetVelocity(slider,speed+0.01)
+-- slider 就會以速度 0.01 向上移動
+    end
+end</pre>
+<div>
+<div class="syntaxhighlighter lua" id="highlighter_555163"></div>
+</div>
 <hr/>
 <h4><strong>BG2</strong></h4>
 <p>初版送球機構設計 (40623215)</p>
@@ -293,7 +348,8 @@ img {
 <p><iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/x51b3j6cYKs" width="560"></iframe></p>
 <p><a href="https://youtu.be/nSbpWyDZdTA">送球機構模擬第二步驟</a>(40623244)</p>
 <p><iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" frameborder="0" height="315" src="https://www.youtube.com/embed/nSbpWyDZdTA" width="560"></iframe></p>
-<p></p><br />V-rep 動態模擬 << <a href='V-rep 動態模擬.html'>Previous</a> <a href='系統功能展示.html'>Next</a> >> 系統功能展示</div>
+<p></p>
+<br />V-rep 動態模擬 << <a href='V-rep 動態模擬.html'>Previous</a> <a href='系統功能展示.html'>Next</a> >> 系統功能展示</div>
         
     <!-- footer -->
       <div class="container">
