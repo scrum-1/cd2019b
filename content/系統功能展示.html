@@ -1,6 +1,6 @@
 <!DOCTYPE html><html>
         <head>
-        <title>CMSimfly</title>
+        <title>期末報告 B 網站</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700,900" rel="stylesheet">
@@ -97,6 +97,11 @@ init_mathjax();
 <script src="https://scrum-3.github.io/web/brython/brython.js"></script>
 <script src="https://scrum-3.github.io/web/brython/brython_stdlib.js"></script>
 -->
+<style>
+img {
+    border: 2px solid blue;
+}
+</style>
 
 </head>
 <body>
@@ -148,8 +153,644 @@ init_mathjax();
           
         </header>
     <div id="tipue_search_content">送球機構設計與模擬 << <a href='送球機構設計與模擬.html'>Previous</a> <a href='結案報告.html'>Next</a> >> 結案報告<br /><h1>系統功能展示</h1>
+<h4><strong>BG1</strong></h4>
 <p>手足球模擬系統功能展示 (模擬展示與說明影片)</p>
-<p></p><br />送球機構設計與模擬 << <a href='送球機構設計與模擬.html'>Previous</a> <a href='結案報告.html'>Next</a> >> 結案報告</div>
+<p><a href="https://github.com/40623203/40623203_cd2019b/tree/gh-pages/downloads">foosball</a>  (40623203)</p>
+<p><a href="https://github.com/mdecadp2018/site-40623233/tree/gh-pages/foosball/Foosball%20people%20vs%20ai">foosball people vs ai</a>  <span>(40623228&amp;40623233)</span></p>
+<p><strong>人對人模擬<span>  (40623203)</span></strong></p>
+<p>左邊鍵盤控制左邊一、二的移動(W鍵:前踢、S鍵:後踢、A鍵:向右移動、D鍵:向左移動)</p>
+<p><span>左邊鍵盤控制左邊三、四的移動(U鍵:前踢、J鍵:後踢、H鍵:向右移動、K鍵:向左移動)</span></p>
+<p><span>右邊鍵盤控制左邊一、二的移動(上鍵:前踢、下鍵:後踢、左鍵:向右移動、右鍵:向左移動)</span></p>
+<p><span>右邊鍵盤控制左邊三、四的移動(8鍵:前踢、5鍵:後踢、4鍵:向右移動、6鍵:向左移動)</span></p>
+<p><strong><img alt="" height="429" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g1/images/%E4%BA%BA%E5%B0%8D%E4%BA%BA%E6%A8%A1%E6%93%AC.gif" width="800"/></strong></p>
+<p><strong>完成品對打<span>  (40623203)</span></strong></p>
+<p><strong><img alt="" height="429" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g1/images/%E5%AE%8C%E6%88%90%E5%93%81%E5%B0%8D%E6%89%93%E6%B8%AC%E8%A9%A6.gif" width="800"/></strong></p>
+<p><strong>left player simulation<span>  (40623203)</span></strong></p>
+<p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/0rHK7NbG45s" width="560"></iframe></strong></p>
+<p><strong>left player finish simulation<span>  (40623203)</span></strong></p>
+<p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/GkIYR4ygDyE" width="560"></iframe></strong></p>
+<p><strong>left and right player simulation<span>  (40623203)</span></strong></p>
+<p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/N659eVjUabg" width="560"></iframe></strong></p>
+<p><strong><span>left1 and 2 player simulation  (40623203)</span></strong></p>
+<p><strong><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/UScXj55MI0M" width="560"></iframe></strong></p>
+<p><strong><span>Foosball  (40623203)</span></strong></p>
+<p><strong><span><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/K6szZBiRbtU" width="560"></iframe></span></strong></p>
+<p><strong><span>Foosball - 測試雙人對打加送球機構  (40623203)</span></strong></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/ZRpXJjpKAno" width="560"></iframe></p>
+<p><strong>手足球人對人程式 ( 分四個部分寫 )：<span>  (40623203)</span></strong></p>
+<p><strong>第一部分：left1 and left2 Program</strong></p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">-- model in Solvespace 500 mm = 5000 mm in V-rep
+--[[
+Simulation is 10 times of realistic environment
+floor in Solvespace 2.5 m x 2.5 m = 25 m x 25 m in V-rep
+ball is in Solivespace 1g (0.001) = 0.01 kg in V-rep
+hammer is in Solvespace 0.1 kg (100g) = 1kg in V-rep (0.1 for Inertia)
+]]
+ 
+threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==119) then
+                    -- up key
+                    velocity=100
+                    torque=200
+                    hammer_back = 0
+                end
+                if (auxiliaryData[1]==115) then
+                    -- down key
+                     hammer_back = 1
+                     torque=-200
+                     velocity = -100
+                end
+                if (auxiliaryData[1]==97) then
+                    -- right key
+                     sliding = sliding + 0.005
+                     sliding_1 = sliding_1 + 0.005
+sim.addStatusbarMessage('sliding:'..sliding)
+sim.addStatusbarMessage('sliding_1:'..sliding_1)  
+                end
+                if (auxiliaryData[1]==100) then
+                    -- left key
+                     sliding = sliding - 0.005
+                     sliding_1 = sliding_1 - 0.005
+sim.addStatusbarMessage('sliding:'..sliding)
+sim.addStatusbarMessage('sliding_1:'..sliding_1) 
+                end
+                if (sliding &lt; -0.0445) then
+                    sliding = -0.0445
+                elseif (sliding &gt; 0.0445) then
+                    sliding = 0.0445
+                end
+                if (sliding_1 &lt; -0.08255) then
+                    sliding_1 = -0.08255
+                elseif (sliding_1 &gt; 0.08255) then
+                    sliding_1 = 0.08255
+                end
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+  
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then
+               sim.setJointPosition(joint, -1, orientation)
+               sim.setJointPosition(joint_1, -1, orientation)
+               --sim.setObjectPosition(hammer, -1, position)
+        end
+        sim.setJointTargetPosition(joint, velocity)
+        sim.setJointTargetPosition(joint_1, velocity)
+        --sim.setJointForce(joint,torque)
+        sim.setJointTargetPosition(slider, sliding)
+        sim.setJointTargetPosition(slider_1, sliding_1)
+ 
+        -- Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+joint=sim.getObjectHandle('left_joint')
+hammer=sim.getObjectHandle('left_player')
+slider=sim.getObjectHandle("left_slider")
+joint_1=sim.getObjectHandle('left_joint_1')
+hammer_1=sim.getObjectHandle('left_player_1')
+slider_1=sim.getObjectHandle("left_slider_1")
+velocity=0
+hammer_back=0
+torque=0
+sliding = 0
+sliding_1 = 0
+orientation=sim.getJointPosition(joint, -1)
+position=sim.getObjectPosition(hammer, -1)
+slider_position=sim.getJointPosition(slider, -1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end</pre>
+<p><strong>第二部分：left3 and left4<span> </span> Program</strong></p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">-- model in Solvespace 500 mm = 5000 mm in V-rep
+--[[
+Simulation is 10 times of realistic environment
+floor in Solvespace 2.5 m x 2.5 m = 25 m x 25 m in V-rep
+ball is in Solivespace 1g (0.001) = 0.01 kg in V-rep
+hammer is in Solvespace 0.1 kg (100g) = 1kg in V-rep (0.1 for Inertia)
+]]
+ 
+threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==117) then
+                    -- up key
+                    velocity=100
+                    torque=200
+                    hammer_back = 0
+                end
+                if (auxiliaryData[1]==106) then
+                    -- down key
+                     hammer_back = 1
+                     torque=-200
+                     velocity = -100
+                end
+                if (auxiliaryData[1]==107) then
+                    -- right key
+                     sliding_2 = sliding_2 + 0.005
+                     sliding_3 = sliding_3 + 0.005
+sim.addStatusbarMessage('sliding_2:'..sliding_2)
+sim.addStatusbarMessage('sliding_3:'..sliding_3)  
+                end
+                if (auxiliaryData[1]==104) then
+                    -- left key
+                     sliding_2 = sliding_2 - 0.005
+                     sliding_3 = sliding_3 - 0.005
+sim.addStatusbarMessage('sliding_2:'..sliding_2)
+sim.addStatusbarMessage('sliding_3:'..sliding_3) 
+                end
+                if (sliding_2 &lt; -0.01905) then
+                    sliding_2 = -0.01905
+                elseif (sliding_2 &gt; 0.01905) then
+                    sliding_2 = 0.01905
+                end
+                if (sliding_3 &lt; -0.0635) then
+                    sliding_3 = -0.0635
+                elseif (sliding_3 &gt; 0.0635) then
+                    sliding_3 = 0.0635
+                end
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+  
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then
+               sim.setJointPosition(joint, -1, orientation)
+               sim.setJointPosition(joint_1, -1, orientation)
+               --sim.setObjectPosition(hammer, -1, position)
+        end
+        sim.setJointTargetPosition(joint, velocity)
+        sim.setJointTargetPosition(joint_1, velocity)
+        --sim.setJointForce(joint,torque)
+        sim.setJointTargetPosition(slider, sliding_2)
+        sim.setJointTargetPosition(slider_1, sliding_3)
+ 
+        -- Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+joint=sim.getObjectHandle('left_joint_2')
+hammer=sim.getObjectHandle('left_player_2')
+slider=sim.getObjectHandle("left_slider_2")
+joint_1=sim.getObjectHandle('left_joint_3')
+hammer_1=sim.getObjectHandle('left_player_3')
+slider_1=sim.getObjectHandle("left_slider_3")
+velocity=0
+hammer_back=0
+torque=0
+sliding_2 = 0
+sliding_3 = 0
+orientation=sim.getJointPosition(joint, -1)
+position=sim.getObjectPosition(hammer, -1)
+slider_position=sim.getJointPosition(slider, -1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end</pre>
+<p><strong>第三部分：right1 and right2 Program</strong></p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">-- model in Solvespace 500 mm = 5000 mm in V-rep
+--[[
+Simulation is 10 times of realistic environment
+floor in Solvespace 2.5 m x 2.5 m = 25 m x 25 m in V-rep
+ball is in Solivespace 1g (0.001) = 0.01 kg in V-rep
+hammer is in Solvespace 0.1 kg (100g) = 1kg in V-rep (0.1 for Inertia)
+]]
+ 
+threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==2007) then
+                    -- up key
+                    velocity=100
+                    torque=200
+                    hammer_back = 0
+                end
+                if (auxiliaryData[1]==2008) then
+                    -- down key
+                     hammer_back = 1
+                     torque=-200
+                     velocity = -100
+                end
+                if (auxiliaryData[1]==2010) then
+                    -- right key
+                     sliding = sliding + 0.005
+                     sliding_1 = sliding_1 + 0.005
+sim.addStatusbarMessage('sliding:'..sliding)
+sim.addStatusbarMessage('sliding_1:'..sliding_1)  
+                end
+                if (auxiliaryData[1]==2009) then
+                    -- left key
+                     sliding = sliding - 0.005
+                     sliding_1 = sliding_1 - 0.005
+sim.addStatusbarMessage('sliding:'..sliding)
+sim.addStatusbarMessage('sliding_1:'..sliding_1) 
+                end
+                if (sliding &lt; -0.0445) then
+                    sliding = -0.0445
+                elseif (sliding &gt; 0.0445) then
+                    sliding = 0.0445
+                end
+                if (sliding_1 &lt; -0.08255) then
+                    sliding_1 = -0.08255
+                elseif (sliding_1 &gt; 0.08255) then
+                    sliding_1 = 0.08255
+                end
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+  
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then
+               sim.setJointPosition(joint, -1, orientation)
+               sim.setJointPosition(joint_1, -1, orientation)
+               --sim.setObjectPosition(hammer, -1, position)
+        end
+        sim.setJointTargetPosition(joint, velocity)
+        sim.setJointTargetPosition(joint_1, velocity)
+        --sim.setJointForce(joint,torque)
+        sim.setJointTargetPosition(slider, sliding)
+        sim.setJointTargetPosition(slider_1, sliding_1)
+ 
+        -- Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+joint=sim.getObjectHandle('right_joint')
+hammer=sim.getObjectHandle('right_player')
+slider=sim.getObjectHandle("right_slider")
+joint_1=sim.getObjectHandle('right_joint_1')
+hammer_1=sim.getObjectHandle('right_player_1')
+slider_1=sim.getObjectHandle("right_slider_1")
+velocity=0
+hammer_back=0
+torque=0
+sliding = 0
+sliding_1 = 0
+orientation=sim.getJointPosition(joint, -1)
+position=sim.getObjectPosition(hammer, -1)
+slider_position=sim.getJointPosition(slider, -1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end</pre>
+<p><strong>第四部分：right3 and right4 Program</strong></p>
+<pre class="brush:lua;auto-links:false;toolbar:false" contenteditable="false">-- model in Solvespace 500 mm = 5000 mm in V-rep
+--[[
+Simulation is 10 times of realistic environment
+floor in Solvespace 2.5 m x 2.5 m = 25 m x 25 m in V-rep
+ball is in Solivespace 1g (0.001) = 0.01 kg in V-rep
+hammer is in Solvespace 0.1 kg (100g) = 1kg in V-rep (0.1 for Inertia)
+]]
+ 
+threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==56) then
+                    -- up key
+                    velocity=100
+                    torque=200
+                    hammer_back = 0
+                end
+                if (auxiliaryData[1]==53) then
+                    -- down key
+                     hammer_back = 1
+                     torque=-200
+                     velocity = -100
+                end
+                if (auxiliaryData[1]==54) then
+                    -- right key
+                     sliding_2 = sliding_2 + 0.005
+                     sliding_3 = sliding_3 + 0.005
+sim.addStatusbarMessage('sliding_2:'..sliding_2)
+sim.addStatusbarMessage('sliding_3:'..sliding_3)  
+                end
+                if (auxiliaryData[1]==52) then
+                    -- left key
+                     sliding_2 = sliding_2 - 0.005
+                     sliding_3 = sliding_3 - 0.005
+sim.addStatusbarMessage('sliding_2:'..sliding_2)
+sim.addStatusbarMessage('sliding_3:'..sliding_3) 
+                end
+                if (sliding_2 &lt; -0.01905) then
+                    sliding_2 = -0.01905
+                elseif (sliding_2 &gt; 0.01905) then
+                    sliding_2 = 0.01905
+                end
+                if (sliding_3 &lt; -0.0635) then
+                    sliding_3 = -0.0635
+                elseif (sliding_3 &gt; 0.0635) then
+                    sliding_3 = 0.0635
+                end
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+  
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then
+               sim.setJointPosition(joint, -1, orientation)
+               sim.setJointPosition(joint_1, -1, orientation)
+               --sim.setObjectPosition(hammer, -1, position)
+        end
+        sim.setJointTargetPosition(joint, velocity)
+        sim.setJointTargetPosition(joint_1, velocity)
+        --sim.setJointForce(joint,torque)
+        sim.setJointTargetPosition(slider, sliding_2)
+        sim.setJointTargetPosition(slider_1, sliding_3)
+ 
+        -- Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+joint=sim.getObjectHandle('right_joint_2')
+hammer=sim.getObjectHandle('right_player_2')
+slider=sim.getObjectHandle("right_slider_2")
+joint_1=sim.getObjectHandle('right_joint_3')
+hammer_1=sim.getObjectHandle('right_player_3')
+slider_1=sim.getObjectHandle("right_slider_3")
+velocity=0
+hammer_back=0
+torque=0
+sliding_2 = 0
+sliding_3 = 0
+orientation=sim.getJointPosition(joint, -1)
+position=sim.getObjectPosition(hammer, -1)
+slider_position=sim.getJointPosition(slider, -1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end</pre>
+<p><span>手足球模擬-人VS電腦(40623228&amp;40623233)</span></p>
+<p><span>紅色桿子-電腦控制(使用Lua抓取球員及球的位置使球員追蹤及打擊)</span></p>
+<p><span>藍色桿子-鍵盤控制(W鍵:前踢、S鍵:後踢、A鍵:向右移動、D鍵:向左移動)</span></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/WBFHkBz3hYM" width="560"></iframe></p>
+<hr/>
+<h4><strong>BG2</strong></h4>
+<p>手足球模擬系統功能展示 (模擬展示與說明影片)</p>
+<p>單人足球員模擬 (40623249)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/wEtOXdks_ds" width="560"></iframe></p>
+<p>雙人足球員模擬 (40623249)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/WQ13H6bC_LY" width="560"></iframe></p>
+<p><a href="https://github.com/mdecadp2018/site-40623220/blob/gh-pages/bg2.ttt">人對人 V-rep</a> (40623220)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/aAG0wYawJ-I" width="560"></iframe></p>
+<p>(40623249)</p>
+<pre class="brush:html;auto-links:false;toolbar:false" contenteditable="false">-- model in Solvespace 500 mm = 5000 mm in V-rep
+--[[
+Simulation is 10 times of realistic environment
+floor in Solvespace 2.5 m x 2.5 m = 25 m x 25 m in V-rep
+ball is in Solivespace 1g (0.001) = 0.01 kg in V-rep
+hammer is in Solvespace 0.1 kg (100g) = 1kg in V-rep (0.1 for Inertia)
+]]
+local joint_r = {'left_joint1','left_joint3','left_joint5','left_joint7',}
+local joint_b = {'left_joint','left_joint2','left_joint4','left_joint6',}
+local slider_r ={'left_slider1','left_slider3','left_slider5','left_slider7',}
+local slider_b ={'left_slider','left_slider2','left_slider4','left_slider6',}
+threadFunction=function()
+    while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
+        -- Read the keyboard messages (make sure the focus is on the main window, scene view):
+        message,auxiliaryData=sim.getSimulatorMessage()
+        while message~=-1 do
+key=auxiliaryData[1]
+sim.addStatusbarMessage('key:'..key)
+            if (message==sim.message_keypress) then
+                if (auxiliaryData[1]==2007)or(auxiliaryData[1]==119) then
+                    -- up key
+                if  (auxiliaryData[1]==119)then
+                    joint_all_c1=sim.getObjectHandle(joint_r[1])
+                    joint_all_c2=sim.getObjectHandle(joint_r[2])  
+                    joint_all_c3=sim.getObjectHandle(joint_r[3])
+                    joint_all_c4=sim.getObjectHandle(joint_r[4])             
+                else
+                    joint_all_c1=sim.getObjectHandle(joint_b[1])
+                    joint_all_c2=sim.getObjectHandle(joint_b[2])
+                    joint_all_c3=sim.getObjectHandle(joint_b[3])
+                    joint_all_c4=sim.getObjectHandle(joint_b[4])    
+                end
+                    velocity=100
+                    torque=200
+                    hammer_back = 0
+end
+                if (auxiliaryData[1]==2008) or (auxiliaryData[1]==115) then
+                    -- down key
+                if  (auxiliaryData[1]==115)then
+                    joint_all_c1=sim.getObjectHandle(joint_r[1])
+                    joint_all_c2=sim.getObjectHandle(joint_r[2])  
+                    joint_all_c3=sim.getObjectHandle(joint_r[3])
+                    joint_all_c4=sim.getObjectHandle(joint_r[4])  
+                else
+                    joint_all_c1=sim.getObjectHandle(joint_b[1])
+                    joint_all_c2=sim.getObjectHandle(joint_b[2])
+                    joint_all_c3=sim.getObjectHandle(joint_b[3])
+                    joint_all_c4=sim.getObjectHandle(joint_b[4])
+                end
+                     hammer_back = 1
+                     torque=-200
+                     velocity = -100
+end
+                if (auxiliaryData[1]==2009) or (auxiliaryData[1]==100) then
+                    -- right key 
+                 
+                if  (auxiliaryData[1]==100)then
+                if (sliding_r&gt;=0.3)then else sliding_r = sliding_r + 0.05 end  
+sim.addStatusbarMessage('sliding_r:'..sliding_r)
+                else
+                if (sliding_b&gt;=0.3)then else sliding_b = sliding_b + 0.05 end
+sim.addStatusbarMessage('sliding_b:'..sliding_b)
+                end
+ 
+                 
+                end
+                if (auxiliaryData[1]==2010) or (auxiliaryData[1]==97) then
+                    -- left key
+                if  (auxiliaryData[1]==97)then
+                if (sliding_r&lt;=-0.3)then else sliding_r = sliding_r - 0.05 end
+                     
+sim.addStatusbarMessage('sliding_r:'..sliding_r)
+                else
+                if (sliding_b&lt;=-0.3)then else sliding_b = sliding_b - 0.05 end
+sim.addStatusbarMessage('sliding_b:'..sliding_b)
+                end
+                end
+            end
+            message,auxiliaryData=sim.getSimulatorMessage()
+        end
+  
+        -- We take care of setting the desired hammer position:
+        if hammer_back == 1
+            then 
+        sim.setJointTargetPosition(joint_all_c1, velocity)
+        sim.setJointTargetPosition(joint_all_c2, velocity)
+        sim.setJointTargetPosition(joint_all_c3, velocity)
+        sim.setJointTargetPosition(joint_all_c4, velocity)
+               --sim.setObjectPosition(hammer, -1, position)
+        end
+        sim.setJointTargetPosition(joint_all_c1, velocity)
+        sim.setJointTargetPosition(joint_all_c2, velocity)
+        sim.setJointTargetPosition(joint_all_c3, velocity)
+        sim.setJointTargetPosition(joint_all_c4, velocity)
+ 
+        --sim.setJointForce(joint,torque)
+        sim.setJointTargetPosition(slider_r_c1, sliding_r)
+        sim.setJointTargetPosition(slider_r_c2, sliding_r)
+        sim.setJointTargetPosition(slider_r_c3, sliding_r)
+        sim.setJointTargetPosition(slider_r_c4, sliding_r)
+        sim.setJointTargetPosition(slider_b_c1, sliding_b)
+        sim.setJointTargetPosition(slider_b_c2, sliding_b)
+        sim.setJointTargetPosition(slider_b_c3, sliding_b)
+        sim.setJointTargetPosition(slider_b_c4, sliding_b)
+        --Since this script is threaded, don't waste time here:
+        sim.switchThread() -- Resume the script at next simulation loop start
+    end
+end
+-- Put some initialization code here:
+-- Retrieving of some handles and setting of some initial values:
+ 
+joint_all_c1=sim.getObjectHandle(joint_r[1])
+joint_all_c2=sim.getObjectHandle(joint_r[2])
+joint_all_c3=sim.getObjectHandle(joint_r[3])
+joint_all_c4=sim.getObjectHandle(joint_r[4])
+ 
+slider_r_c1=sim.getObjectHandle(slider_r[1])
+slider_r_c2=sim.getObjectHandle(slider_r[2])  
+slider_r_c3=sim.getObjectHandle(slider_r[3])
+slider_r_c4=sim.getObjectHandle(slider_r[4])
+ 
+slider_b_c1=sim.getObjectHandle(slider_b[1])
+slider_b_c2=sim.getObjectHandle(slider_b[2])  
+slider_b_c3=sim.getObjectHandle(slider_b[3])
+slider_b_c4=sim.getObjectHandle(slider_b[4]) 
+ 
+hammer=sim.getObjectHandle('player')
+velocity=0
+hammer_back=0
+torque=0
+sliding_r = 0
+sliding_b = 0
+orientation=sim.getJointPosition(joint_all_c1, -1)
+position=sim.getObjectPosition(hammer, -1)
+-- Here we execute the regular thread code:
+res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
+if not res then
+    sim.addStatusbarMessage('Lua runtime error: '..err)
+end
+  
+-- Put some clean-up code here:</pre>
+<p><a href="https://drive.google.com/open?id=1ZWjvxCqKGr-Szal7qcLMl7sAYaviV7aP">人對機</a>(40623249)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/MxwbTm1Q78Q" width="560"></iframe></p>
+<p><a href="https://drive.google.com/open?id=1p2HKnmYjagW8lsLz0vRP7G1mGymBHOcH">機對機(</a>40623249)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/Uv_SfE0ZHog" width="560"></iframe></p>
+<p></p>
+<p></p>
+<hr/>
+<h4><strong>BG3</strong></h4>
+<p>手足球模擬系統功能展示 (模擬展示與說明影片)</p>
+<p><span>手足球系統模擬-人</span><yt-formatted-string class="style-scope ytd-video-primary-info-renderer" force-default-style="">對人(40423160)</yt-formatted-string></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/I19GK0fYO_E" width="560"></iframe></p>
+<p><span>手足球系統模擬-人</span><yt-formatted-string class="style-scope ytd-video-primary-info-renderer" force-default-style="">對電腦<span>(40423160)</span></yt-formatted-string></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/OAVXWbMAh4I" width="560"></iframe></p>
+<p><span>手足球系統模擬-</span><yt-formatted-string class="style-scope ytd-video-primary-info-renderer" force-default-style="">電腦對電腦<span>(40423160)</span></yt-formatted-string></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/qP5MVSiju8U" width="560"></iframe></p>
+<p><span>手足球系統模擬-人對人(40623237)</span></p>
+<p><span><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/oxf7Ok9Unbs" width="560"></iframe></span></p>
+<p><a href="https://www.youtube.com/watch?v=oxf7Ok9Unbs" target="_blank">手足球人與人模擬(40623237)</a></p>
+<hr/>
+<h4><strong>BG4</strong></h4>
+<p>手足球模擬系統功能展示 (模擬展示與說明影片)</p>
+<p>攝影機架設(40423158)</p>
+<p>主要讓視角更透明</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/Br_4BFrC9c4" width="500"></iframe></p>
+<p>第一版手足球模擬-手動對手動(40623225)</p>
+<p>下載連結:<a href="https://drive.google.com/open?id=1zn-iDygqKOY0GLal_K_GpOUKKjkdw6wi">手動第一版</a></p>
+<p>在11周時將手足球模擬-手動對手動的第一版部分完成</p>
+<p><iframe allowfullscreen="allowfullscreen" height="300" src="//www.youtube.com/embed/CD5KcyWODkA" width="500"></iframe></p>
+<p>第二版手足球模擬-手動對手動(40623225)</p>
+<p>下載連結:<a href="https://drive.google.com/open?id=1Mepncgu_j8xXcwzr8cBGuoomrlepK6ls">手動第二版</a></p>
+<p>目前兩邊的守門員都可以手動操作，接下來要將所有足球員放上檯子並且都可手動操作。</p>
+<p><iframe allowfullscreen="allowfullscreen" height="300" src="//www.youtube.com/embed/qhQ_61JPNnc" width="500"></iframe></p>
+<p><span>第三版手足球模擬-手動對手動(40623227):</span></p>
+<p>下載連結;<a href="https://drive.google.com/file/d/14_Ld--05_Gk0zj0_oOZCRhzw-5F9zkYK/view?usp=sharing">手動第三版</a></p>
+<p>雖已完成全部部分，可是在邊界的設定上還有問題</p>
+<p><img alt="" src="https://youtu.be/x2AXkML0JEA" width="500"/><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/x2AXkML0JEA" width="500"></iframe></p>
+<p><span>第四版手足球模擬-手動對手動(40623225)</span></p>
+<p><span>下載連結:<a href="https://drive.google.com/open?id=1ETuJhagFJZ4FRmzRamAoNS52e2Maq4wN">手動第四版</a></span></p>
+<p><span>邊界上已完全解決問題，目前都能正常運作，只剩送球機構尚未完成。</span></p>
+<p><span>利用下面的程式限制球員的移動距離。</span></p>
+<p><span><img alt="" height="289" src="https://mdekmol.github.io/cd2019b-task1-2019cdb_t1_g4/images/40623225-w12-1.png" width="500"/></span></p>
+<p><span><iframe allowfullscreen="allowfullscreen" height="300" src="//www.youtube.com/embed/rcA3xKkyCaQ" width="500"></iframe></span></p>
+<p><span>最終版手足球模擬-手動對手動(40623225)</span></p>
+<p><span>下載連結:<a href="https://drive.google.com/open?id=1g7dYrdT94Rtb55AgdVyrPanAW1tU_pCe">手動最終版</a></span></p>
+<p><iframe allowfullscreen="allowfullscreen" height="325" src="//www.youtube.com/embed/ltAH5UlB6ds" width="500"></iframe></p>
+<p><span></span></p>
+<p><span>第一版手足球模擬-機器對機器(40623227):</span></p>
+<p>下載連結;<a href="https://drive.google.com/file/d/125ZPS3O3h64K_FeiV0U-3l9h1GSbCjqI/view?usp=sharing">機器第一版</a></p>
+<p>目前完成守門員對打部分</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/Cm4RhqdW_vc" width="500"></iframe></p>
+<p>第二版手足球模擬-機器對機器(Final version)(40623227)</p>
+<p>下載連結:<a href="https://drive.google.com/file/d/1_Hk3IbIg1_vGYoDoedjd3eVrQ4iWQK_m/view?usp=sharing">機器第二版</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/pvus4S3yhbE" width="500"></iframe></p>
+<p><span>第一版手足球模擬-機器對手動(40623227):</span></p>
+<p>下載連結;<a href="https://drive.google.com/file/d/1stltNUCA3TBNsBXcunT5DVx0cD42aGI8/view?usp=sharing">機器對手動第一版</a></p>
+<p>目前完成守門員對打部分</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/J20mDSVSsJ0" width="500"></iframe></p>
+<p><span>第二版手足球模擬-機器對手動(40423158):</span></p>
+<p>下載連結;<a href="https://drive.google.com/file/d/1nQI2bo5egtqbbNVHnEDmgz_KxpFZRBXN/view?usp=sharing">機器對手動第二版</a></p>
+<p>大致上都已完成只缺送球機構，此版本球員還未能準確抓住球路線，但能簡易判定球位址</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/bnAa8GlCFDQ" width="500"></iframe></p>
+<p><span>最終版手足球模擬-機器對手動(40423158):</span></p>
+<p>參考學弟程式碼再加以小修正</p>
+<p>修正<a href="https://40423158.github.io/2019cd/content/%E6%89%8B%E5%8B%95VS%E9%9B%BB%E8%85%A6.html">網址</a></p>
+<p>下載連結;<a href="https://drive.google.com/file/d/1eaj6ecl3lIpankWGjdBZQgur_Uf5SOrK/view">機器對手動(最終版)</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/m5kw-mUYSu0" width="500"></iframe></p>
+<p></p>
+<p></p>
+<hr/>
+<h4><strong>BG5</strong></h4>
+<p>手足球模擬系統功能展示 (模擬展示與說明影片)</p>
+<p><a href="https://40623217.github.io/Collaborative-Product-Design-Practice/content/Object%20setting%20step.html">物件設定步驟</a>(40623217)</p>
+<p><a href="https://mdecadp2018.github.io/site-40623242/content/human%20and%20human.html">人對人程式解說</a>(40623242) </p>
+<p><a href="https://40623217.github.io/Collaborative-Product-Design-Practice/content/human%20and%20computer.html">人對電腦程式解說</a>(40623217) </p>
+<p><a href="https://40623217.github.io/Collaborative-Product-Design-Practice/content/computer%20and%20computer.html">電腦對電腦程式解說</a>(40623217) </p>
+<p>人對人(40623242)</p>
+<p><a href="https://drive.google.com/file/d/1LLVPwLx3G67wi5npJNZ0eJnpJyQpIOpH/view?usp=sharing">檔案下載</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/gR3Cdi34DvQ" width="560"></iframe></p>
+<p>人對電腦 (40623217)</p>
+<p><a href="https://drive.google.com/file/d/1OZNJWb5ipTxwpeXnJ7E9Jkpu8Z0K3Pvf/view?usp=sharing">檔案下載</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/SmzVGYIxK1g" width="600"></iframe></p>
+<p>電腦對電腦(40623217)</p>
+<p><a href="https://drive.google.com/file/d/1W2DXekXXTdaQqccRKhFuXDd1bJ4poh4D/view?usp=sharing">檔案下載</a></p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/QDQnJRHG0R0" width="600"></iframe></p>
+<p>玩家視角 (40623248)</p>
+<p><iframe allowfullscreen="allowfullscreen" height="314" src="//www.youtube.com/embed/wkhAIW39eGQ" width="560"></iframe></p><br />送球機構設計與模擬 << <a href='送球機構設計與模擬.html'>Previous</a> <a href='結案報告.html'>Next</a> >> 結案報告</div>
         
     <!-- footer -->
       <div class="container">
